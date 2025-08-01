@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +29,17 @@ public class Todo {
 
     @Column(name = "due_date")
     private LocalDate dueDate;
+
+    @ManyToOne
+    private DCUser utilisateur;
+
+    public DCUser getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(DCUser utilisateur) {
+        this.utilisateur = utilisateur;
+    }
 
     // Default constructor
     public Todo() {

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class DCUser {
@@ -37,5 +38,9 @@ public class DCUser {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

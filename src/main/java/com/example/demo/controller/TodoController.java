@@ -1,11 +1,12 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,16 +17,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.TodoDTO;
+import com.example.demo.model.LogDocument;
+import com.example.demo.service.LogDocumentService;
 import com.example.demo.service.TodoService;
 
-@CrossOrigin(origins = "http://localhost:3000") // Adjust for your frontend URL
 @RestController
-@RequestMapping("/api/todos")
+@RequestMapping("/api/action")
 public class TodoController {
+
+	@Autowired
+	private LogDocumentService logService;
 
     private final TodoService todoService;
 
-    @Autowired
     public TodoController(TodoService todoService) {
         this.todoService = todoService;
     }
@@ -44,6 +48,15 @@ public class TodoController {
 
     @PostMapping
     public ResponseEntity<TodoDTO> createTodo(@RequestBody TodoDTO todoDTO) {
+        Map<String, Object> extras = Map.of(
+            "request", todoDTO
+        );
+        LogDocument entry = new LogDocument();
+        entry.setTimestamp(LocalDateTime.now());
+        entry.setText("Todo called");
+        entry.setExtras(extras);
+        this.logService.addLog(entry);
+
         TodoDTO createdTodo = todoService.createTodo(todoDTO);
         return new ResponseEntity<>(createdTodo, HttpStatus.CREATED);
     }
